@@ -5,20 +5,29 @@ import * as Yup from 'yup';
 
 const MyInput = ({ fieldName, ...props }) => {
 
-    const [field] = useField(fieldName)
+    const [field, metadata] = useField(fieldName)
 
-    return ( <
+    return (
+        <>
+        <
         TextInput style = {
             styles.input
         }
         onChangeText = {
             field.onChange('email')
         }
+        onBlur = {
+            field.onBlur(fieldName)
+        }
         value = {
             field.value
         }
         { ...props }
         />
+        { metadata.error && metadata.touched && (
+            <Text style ={{ color: 'red' }}>{ metadata.error }</Text>
+        )}
+        </>
     )
 }
 
@@ -46,10 +55,10 @@ export default function App() {
                         .email('Correo inválido')
                         .required('Dato requerido'),
                     name: Yup.string()
-                        .min(50)
+                        .min(10)
                         .required('Dato requerido')
             })}
-            initialValues= {{ email: '' }}>
+            initialValues= {{ email: '', name: '' }}>
             <EmailForm />
         </Formik>
         </View>
