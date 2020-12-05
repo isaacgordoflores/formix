@@ -1,7 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import * as Yup from 'yup';
 
+/* Sin YUP
 const validate = values => {
   const errors = {};
   if (!values.email) {
@@ -11,14 +13,21 @@ const validate = values => {
   }
   return errors
 }
+*/
+
 
 export default function App() {
 
   const formik = useFormik({
     initialValues: {
-      email: 'hola@puebadeemail.com',
+      email: '',
     },
+    validationSchema: Yup.object({
+      email: Yup.string().email('Correo inválido').required('Dato requerido'),
+    }),
+    /* Sin YUP
     validate,
+    */
     onSubmit: x => console.warn(x)
   })
 
@@ -27,11 +36,12 @@ export default function App() {
       <Text>FORMIX FORM</Text>
       <Text>Correo Electrónico</Text>
       <TextInput
+        onBlur = { formik.handleBlur('email') }
         style = { styles.input }
         onChangeText = { formik.handleChange('email') }
         value = { formik.values.email }
       />
-      { formik.errors.email ? <Text>{ formik.errors.email }</Text> : null }
+      { formik.errors.email && formik.touched.email ? <Text>{ formik.errors.email }</Text> : null }
       <Button title = 'Enviar' onPress = { formik.handleSubmit } />
       <StatusBar style="auto" />
     </View>
